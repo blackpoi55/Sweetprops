@@ -1,0 +1,19 @@
+{
+  "name": "sweetprops",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Free local prop generator for Roblox Studio, driven by Roblox StudioMCP",
+  "type": "module",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "test": "node --test \"test/*.test.js\""
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1"
+  }
+}

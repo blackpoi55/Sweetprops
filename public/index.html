@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sweetprops</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brand" href="#create" aria-label="Sweetprops">
+      <img src="/icon.svg" alt="" width="30" height="30">
+      <span>Sweet<b>props</b></span>
+    </a>
+    <button class="conn" id="conn" type="button" title="สถานะการเชื่อมต่อ Roblox Studio">
+      <i class="dot"></i><span id="connText">กำลังหา Studio…</span>
+    </button>
+    <select id="studioPick" class="studio-pick" hidden aria-label="เลือก Studio"></select>
+    <div class="spacer"></div>
+    <button class="btn ghost sm" id="paletteBtn" type="button" title="คำสั่งด่วน (Ctrl+K)">
+      <svg viewBox="0 0 24 24" class="i"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>คำสั่งด่วน <kbd>Ctrl K</kbd></button>
+    <button class="icon-btn" id="themeBtn" type="button" title="สลับธีม สว่าง/มืด" aria-label="สลับธีม">
+      <svg viewBox="0 0 24 24" class="i sun"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      <svg viewBox="0 0 24 24" class="i moon"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+    </button>
+  </header>
+
+  <nav class="sidenav" aria-label="เมนู">
+    <a href="#create" data-page="create"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l1.9 4.6L18.5 9l-4.6 1.9L12 15.5l-1.9-4.6L5.5 9l4.6-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></span>สร้าง</a>
+    <a href="#customize" data-page="customize"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M14 6l4 4"/></svg></span>ปรับแต่ง</a>
+    <a href="#library" data-page="library"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v14H4z"/><path d="M14 5l5 1.2-3 13-5-1.2z"/></svg></span>คลัง</a>
+    <a href="#store" data-page="store"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h16l-1.5 10h-13z"/><path d="M8 9V7a4 4 0 0 1 8 0v2"/></svg></span>ของฟรี</a>
+    <div class="nav-gap"></div>
+    <a href="#guide" data-page="guide"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><path d="M12 17.5v.01"/></svg></span>คู่มือ</a>
+    <a href="#settings" data-page="settings"><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M4.2 6.2l2.1 2.1M17.7 15.7l2.1 2.1M2.5 12h3M18.5 12h3M4.2 17.8l2.1-2.1M17.7 8.3l2.1-2.1"/></svg></span>ตั้งค่า</a>
+  </nav>
+
+  <main class="main">
+    <!-- ======================= CREATE ======================= -->
+    <section class="page" id="page-create">
+      <div class="onboard" id="onboard" hidden>
+        <div class="onboard-text">
+          <b>เชื่อม Roblox Studio ก่อนเริ่มสร้าง</b>
+          <ol>
+            <li>เปิด <b>Roblox Studio</b> แล้วเปิด place</li>
+            <li><b>Assistant</b> → <b>⋯</b> → <b>Manage MCP Servers</b> → เปิด <b>Enable Studio as MCP server</b></li>
+            <li>กด “ลองเชื่อมอีกครั้ง” — ไฟเขียวมุมบนแปลว่าพร้อม</li>
+          </ol>
+        </div>
+        <button class="btn primary" id="onboardRetry" type="button">ลองเชื่อมอีกครั้ง</button>
+      </div>
+      <div class="hero">
+        <div>
+          <h1>อยากได้ของแบบไหน <span class="grad">เสกให้เลย</span></h1>
+          <p class="muted">พิมพ์ไอเดียหรืออัปรูป ระบบจะสร้างโมเดลแล้ววางไว้หน้ากล้องใน Studio ให้ ฟรีด้วย AI ของ Roblox</p>
+        </div>
+      </div>
+      <div class="create-grid">
+        <form class="card create-form" id="createForm" autocomplete="off">
+          <div class="seg" role="tablist" id="modeSeg">
+            <button type="button" class="on" data-mode="mesh">AI เมช <small>สวย เนียน มีลาย</small></button>
+            <button type="button" data-mode="parts">ประกอบชิ้นส่วน <small>แก้ไขง่าย ปรับค่าได้</small></button>
+            <button type="button" data-mode="image">จากรูปต้นแบบ <small>อัปรูปให้ทำตาม</small></button>
+          </div>
+
+          <div class="dropzone" id="dropzone" hidden>
+            <input type="file" id="imageInput" accept="image/png,image/jpeg" hidden>
+            <div class="dz-empty" id="dzEmpty">
+              <div class="dz-ico">🖼️</div>
+              <b>ลากรูปมาวาง หรือคลิกเพื่อเลือก</b>
+              <span>PNG/JPG ไม่เกิน 5MB · วาง (Ctrl+V) จากคลิปบอร์ดได้</span>
+            </div>
+            <div class="dz-preview" id="dzPreview" hidden>
+              <img id="dzImg" alt="รูปต้นแบบ">
+              <button type="button" class="btn ghost sm" id="dzClear">เปลี่ยนรูป</button>
+            </div>
+          </div>
+
+          <div class="imgpanel" id="imgPanel" hidden>
+            <span class="label">วิธีสร้างจากรูป</span>
+            <div class="method" id="methodSeg">
+              <button type="button" class="on" data-m="card">
+                <b>🎴 การ์ด 2.5D</b><span>เหมือนภาพ 100% · ลบพื้นหลัง พับเป็นมิติ ใส่ตัวละครได้</span><i>แนะนำสำหรับปีก ป้าย ของแบน</i>
+              </button>
+              <button type="button" data-m="cloud3d">
+                <b>🧬 3D เหมือนรูป</b><span>AI รูป→3D (TripoSR) รันในเครื่องคุณ ได้โมเดล 3D มีลายตามรูปจริง</span><i>ฟรี 100% · ออฟไลน์ · ไม่ต้องสมัคร</i>
+              </button>
+              <button type="button" data-m="ai">
+                <b>🧊 AI Roblox ตามรูป</b><span>ประกอบจากบล็อก ไม่ต้องใช้ token แต่ไม่เหมือนเป๊ะ</span><i>ทำคู่กับ AI เมชได้</i>
+              </button>
+            </div>
+            <div class="cloud-opts" id="cloudOpts" hidden>
+              <div class="notice" id="cloudTokenWarn" hidden>
+                ยังไม่ได้ติดตั้งตัวสร้าง 3D ในเครื่อง — ดับเบิลคลิก <b>Setup-3D.bat</b> ในโฟลเดอร์ Sweetprops (ฟรี ดาวน์โหลด ~2.5GB ครั้งเดียว)
+              </div>
+              <div class="field">
+                <span class="label">รูปมุมอื่นของชิ้นเดียวกัน <em>ใช้เฉพาะโหมดคลาวด์ (มี HF token) · ตัวในเครื่องใช้รูปหลักรูปเดียว</em></span>
+                <div class="views" id="viewList"></div>
+                <div class="row-btns">
+                  <label class="btn sm ghost">+ เพิ่มรูปมุมอื่น<input type="file" id="viewInput" accept="image/png,image/jpeg,image/webp" multiple hidden></label>
+                  <button type="button" class="btn sm ghost" id="viewFromCrop" title="ครอปมุมอื่นจากแผ่นแปลนเดียวกัน">✂ ครอปมุมอื่นจากแผ่นแปลน</button>
+                  <button type="button" class="btn sm ghost" id="mainCrop" title="ครอปรูปหลัก เช่น เฉพาะ FRONT VIEW">✂ ครอปรูปหลัก</button>
+                </div>
+              </div>
+              <p class="muted" id="cloudImportNote"></p>
+            </div>
+            <div class="card-opts" id="cardOpts">
+              <div class="checker"><canvas id="cardPreview" aria-label="ตัวอย่างรูปหลังลบพื้นหลัง"></canvas></div>
+              <div class="card-ctl">
+                <label class="check"><input type="checkbox" id="cardBg" checked> ลบพื้นหลังให้โปร่งใส</label>
+                <label class="field"><span class="label">ความแรงการลบพื้นหลัง <em id="tolVal">38</em></span><input type="range" id="cardTol" min="5" max="120" value="38"></label>
+                <label class="check"><input type="checkbox" id="cardSplit" checked> ผ่าซ้าย-ขวา แล้วพับเป็นตัว V ให้มีมิติ</label>
+                <label class="field"><span class="label">มุมพับ <em id="angVal">18°</em></span><input type="range" id="cardAngle" min="0" max="45" value="18"></label>
+                <label class="field"><span class="label">ความกว้าง (studs)</span><input type="number" id="cardWidth" value="8" min="1" step="0.5"></label>
+                <button type="button" class="btn sm ghost" id="cropBtn">✂ ครอปเฉพาะส่วน (เช่น FRONT VIEW ในแผ่นแปลน)</button>
+                <p class="muted">ภาพจะอัปโหลดเข้าบัญชี Roblox ของคุณ (ฟรี) ภาพใหม่อาจใช้เวลาตรวจสอบสักครู่ก่อนขึ้นใน Studio</p>
+              </div>
+            </div>
+            <div class="palette-row" id="paletteRow" hidden>
+              <span class="label">ชุดสีจากรูป</span>
+              <label title="สีหลัก"><input type="color" id="palPrimary"><small>หลัก</small></label>
+              <label title="สีรอง"><input type="color" id="palSecondary"><small>รอง</small></label>
+              <label title="สีอัญมณี"><input type="color" id="palAccent"><small>อัญมณี</small></label>
+              <label title="สีโลหะ"><input type="color" id="palMetal"><small>ทอง</small></label>
+              <span class="muted" id="palWords"></span>
+            </div>
+          </div>
+
+          <div class="step"><i>1</i><span>ไอเดีย</span></div>
+          <label class="field">
+            <span class="label">อธิบายสิ่งที่อยากได้ <em id="promptHint">ภาษาอังกฤษได้ผลดีที่สุด ภาษาไทยก็ใช้ได้</em></span>
+            <textarea id="prompt" rows="3" maxlength="500" placeholder="เช่น ร้านขายไอศกรีมรูปโคนยักษ์ หลังคาลายทางชมพูขาว มีป้ายไฟ"></textarea>
+            <span class="counter"><span id="promptCount">0</span>/500</span>
+          </label>
+          <div class="templates" id="templateChips"></div>
+          <div class="chips" id="ideaChips"></div>
+          <div class="boost">
+            <span class="boost-label">✨ เติมรายละเอียดให้สวยขึ้น</span>
+            <div class="chips" id="boostChips"></div>
+          </div>
+
+          <div class="step"><i>2</i><span>สไตล์</span></div>
+
+          <div class="style-grid" id="styleChips"></div>
+
+          <div class="step"><i>3</i><span>ขนาดและความละเอียด</span></div>
+
+          <div class="row2">
+            <div class="field">
+              <span class="label">ขนาด</span>
+              <div class="cards4" id="sizeCards"></div>
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <span class="label">รูปทรง</span>
+              <div class="chips selectable" id="aspectChips">
+                <button type="button" data-v="auto" class="on">อัตโนมัติ</button>
+                <button type="button" data-v="tall">สูง</button>
+                <button type="button" data-v="wide">กว้าง</button>
+                <button type="button" data-v="long">ยาว</button>
+                <button type="button" data-v="flat">แบน</button>
+              </div>
+            </div>
+            <div class="field">
+              <span class="label">รายละเอียด</span>
+              <div class="chips selectable" id="detailChips">
+                <button type="button" data-v="low">เบา · ลื่นในเกม</button>
+                <button type="button" data-v="mid" class="on">ปานกลาง · แนะนำ</button>
+                <button type="button" data-v="high">ละเอียด · สวยสุด</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step"><i>4</i><span>ตกแต่งเพิ่ม <em>ไม่บังคับ</em></span></div>
+          <details class="more">
+            <summary>ตั้งชื่อ · แยกชิ้นส่วน · การชน · เอฟเฟกต์</summary>
+            <div class="more-body">
+              <div class="row3">
+                <label class="field"><span class="label">ชื่อใน Explorer</span><input id="propNameIn" placeholder="ตั้งให้อัตโนมัติ"></label>
+                <label class="field"><span class="label">ขนาดสุดท้าย (studs)</span><input id="scaleStuds" type="number" min="0.2" step="0.1" placeholder="ตามขนาดที่เลือก"></label>
+                <label class="field"><span class="label">จำนวนสามเหลี่ยมสูงสุด</span><input id="customTris" type="number" min="12" max="20000" placeholder="ตามรายละเอียด"></label>
+              </div>
+              <label class="field">
+                <span class="label">แยกชิ้นส่วน <em>คั่นด้วย , เช่น body, lid, handle — แยกชิ้นไว้เปลี่ยนสี/ขยับทีหลังได้</em></span>
+                <input id="partNames" placeholder="ไม่ต้องใส่ก็ได้">
+              </label>
+              <div class="row3">
+                <label class="check"><input type="checkbox" id="optAnchor" checked> ยึดอยู่กับที่ (Anchored)</label>
+                <label class="check"><input type="checkbox" id="optPlace" checked> วางบนพื้นหน้ากล้อง</label>
+                <label class="field inline"><span class="label">การชน</span>
+                  <select id="optCollision">
+                    <option value="hull">พอดีรูปทรง (Hull)</option>
+                    <option value="box">กล่อง (เบาสุด)</option>
+                    <option value="default">ค่าเดิม</option>
+                    <option value="none">ทะลุได้</option>
+                  </select>
+                </label>
+              </div>
+              <div class="field">
+                <span class="label">ใส่เอฟเฟกต์ให้ทันทีเมื่อสร้างเสร็จ</span>
+                <div class="chips selectable multi" id="fxChips"></div>
+                <label class="field inline"><span class="label">สีเอฟเฟกต์</span><input type="color" id="fxColor" value="#ffd678"></label>
+              </div>
+            </div>
+          </details>
+
+          <div class="step ai-only"><i>5</i><span>โหมดมือโปร <em>ให้สวยและใกล้รูปขึ้น</em></span></div>
+          <div class="pro ai-only" id="proBox">
+            <div class="pro-row">
+              <span class="label">สร้างพร้อมกัน</span>
+              <div class="chips selectable" id="variantChips">
+                <button type="button" data-v="1">1 แบบ</button>
+                <button type="button" data-v="2">2 แบบ</button>
+                <button type="button" data-v="3" class="on">3 แบบ · แนะนำ</button>
+                <button type="button" data-v="4">4 แบบ</button>
+              </div>
+            </div>
+            <label class="check" id="dualWrap" hidden><input type="checkbox" id="optDual" checked> ทำคู่: แบบประกอบตามรูป + แบบ AI เมชจากคำอธิบาย</label>
+            <div class="pro-grid">
+              <label class="check"><input type="checkbox" id="optTint"> ย้อมสีลาย (เก็บรายละเอียด) <input type="color" id="tintColor" value="#ffc4dc"></label>
+              <label class="field inline"><span class="label">วัสดุมือโปร</span>
+                <select id="optRestyle">
+                  <option value="smart">อัจฉริยะ: ทองเงา + อัญมณีแก้ว</option>
+                  <option value="repaint">ย้อมทั้งตัวตามชุดสี</option>
+                  <option value="off">ปิด (ตาม AI)</option>
+                </select>
+              </label>
+              <label class="field inline"><span class="label">แขวนจี้คริสตัล</span><input type="number" id="optPendants" value="0" min="0" max="40" class="num"><em>อัน</em></label>
+            </div>
+            <div class="pro-row">
+              <span class="label">โปรยของแต่งบนผิว</span>
+              <div class="chips selectable multi" id="decorChips">
+                <button type="button" data-v="flower">🌸 ดอกซากุระ</button>
+                <button type="button" data-v="heart">💗 หัวใจ</button>
+                <button type="button" data-v="pearl">⚪ ไข่มุก</button>
+                <button type="button" data-v="gem">💎 อัญมณี</button>
+              </div>
+              <input type="number" id="decorCount" value="14" min="1" max="80" class="num" aria-label="จำนวนต่อแบบ">
+            </div>
+            <label class="check"><input type="checkbox" id="optFit" checked> ปรับขนาดให้ตรงตามที่เลือก</label>
+          </div>
+
+          <div class="prompt-preview" id="promptPreview" title="ข้อความที่จะส่งให้ AI"></div>
+          <div class="create-foot">
+            <span class="muted">ฟรี ไม่มีเครดิต · โมเดลจะโผล่หน้ากล้องใน Studio · <kbd>Ctrl</kbd>+<kbd>Enter</kbd></span>
+            <button class="btn primary lg" id="genBtn" type="submit">✦ สร้าง</button>
+          </div>
+        </form>
+
+        <aside class="card jobs">
+          <div class="card-head">
+            <h2>งานที่สร้าง</h2>
+            <button class="btn ghost sm" id="clearJobs" type="button">ล้างที่เสร็จ</button>
+          </div>
+          <div id="jobList" class="job-list"><p class="empty">ยังไม่มีงาน ลองพิมพ์ไอเดียแล้วกด “สร้าง”</p></div>
+          <div class="tips">
+            <b>💡 เคล็ดลับ</b>
+            <p id="tipText"></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======================= CUSTOMIZE ======================= -->
+    <section class="page" id="page-customize" hidden>
+      <div class="split">
+        <aside class="card prop-list">
+          <div class="card-head">
+            <h2>ใน Studio</h2>
+            <button class="btn ghost sm" id="refreshProps" type="button" title="รีเฟรช">↻</button>
+          </div>
+          <input class="search" id="propSearch" placeholder="ค้นหาโมเดล…">
+          <label class="check sm"><input type="checkbox" id="onlyTagged"> เฉพาะที่ทำด้วย Sweetprops</label>
+          <div class="row-btns">
+            <button class="btn sm" id="useSelection" type="button">ใช้ตัวที่เลือกใน Studio</button>
+            <button class="btn sm ghost" id="groupSel" type="button" title="รวมของที่เลือกใน Studio เป็น Model เดียว">รวมเป็น Model</button>
+          </div>
+          <div id="propItems" class="prop-items"></div>
+        </aside>
+
+        <div class="card editor" id="editor">
+          <div class="empty-state" id="editorEmpty">
+            <div class="big">✎</div>
+            <b>เลือกโมเดลทางซ้าย</b>
+            <span>หรือคลิกของใน Studio แล้วกด “ใช้ตัวที่เลือกใน Studio”</span>
+          </div>
+          <div id="editorBody" hidden>
+            <div class="ed-head">
+              <div>
+                <h2 id="edName">–</h2>
+                <div class="muted" id="edMeta"></div>
+              </div>
+              <div class="row-btns">
+                <button class="btn sm" data-act="select" type="button">ดูในกล้อง</button>
+                <button class="btn sm" data-act="save" type="button">★ เก็บเข้าคลัง</button>
+                <button class="btn sm danger" data-act="remove" type="button">ลบ</button>
+              </div>
+            </div>
+
+            <div class="ed-grid">
+              <div class="tool">
+                <h3>จัดวาง</h3>
+                <div class="row-btns">
+                  <button class="btn sm" data-act="placeFront" type="button">วางหน้ากล้อง</button>
+                  <button class="btn sm" data-act="dropToGround" type="button">วางลงพื้น</button>
+                  <button class="btn sm" data-act="rotY" type="button">หมุน 90°</button>
+                  <button class="btn sm" data-act="rot45" type="button">หมุน 45°</button>
+                  <button class="btn sm" data-act="turn" type="button" title="ถ้าโมเดลหันหลังให้กล้อง">กลับหน้า 180°</button>
+                  <button class="btn sm" data-act="flip" type="button">พลิกกลับหัว</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>ขนาด</h3>
+                <div class="row-btns">
+                  <input type="number" id="edStuds" min="0.2" step="0.5" class="num" aria-label="ขนาดด้านที่ยาวที่สุด">
+                  <span class="muted">studs</span>
+                  <button class="btn sm" data-act="scaleTo" type="button">ตั้งขนาด</button>
+                  <button class="btn sm ghost" data-act="half" type="button">×0.5</button>
+                  <button class="btn sm ghost" data-act="x075" type="button">×0.75</button>
+                  <button class="btn sm ghost" data-act="x125" type="button">×1.25</button>
+                  <button class="btn sm ghost" data-act="double" type="button">×2</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>สี</h3>
+                <div class="swatches" id="swatches"></div>
+                <div class="row-btns">
+                  <input type="color" id="edColor" value="#ff7aa8" aria-label="เลือกสี">
+                  <label class="check sm"><input type="checkbox" id="edOverrideTex"> ทับลายเดิม</label>
+                  <button class="btn sm" data-act="color" type="button">ทาสี</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>วัสดุ</h3>
+                <div class="row-btns">
+                  <select id="edMaterial"></select>
+                  <button class="btn sm" data-act="material" type="button">ใช้วัสดุ</button>
+                </div>
+                <div class="ai-mat">
+                  <input id="aiMatDesc" placeholder="วัสดุ AI เช่น ไม้โอ๊คเก่ามีรอยขีด, หินอ่อนชมพูลายทอง">
+                  <select id="aiMatBase" aria-label="วัสดุพื้นฐาน"></select>
+                  <button class="btn sm primary" data-act="aiMaterial" type="button">✦ สร้างวัสดุ AI</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>เอฟเฟกต์ <span class="muted">คลิกเพื่อเปิด/ปิด</span></h3>
+                <div class="chips selectable multi" id="edFx"></div>
+                <div class="row-btns"><span class="muted">สี</span><input type="color" id="edFxColor" value="#ffd678"></div>
+              </div>
+
+              <div class="tool">
+                <h3>ฟิสิกส์</h3>
+                <div class="row-btns">
+                  <button class="btn sm" data-act="anchorOn" type="button">ยึดกับที่</button>
+                  <button class="btn sm" data-act="anchorOff" type="button">ปล่อยให้ตก/ผลักได้</button>
+                  <button class="btn sm" data-act="collideOff" type="button">ทะลุได้</button>
+                  <button class="btn sm" data-act="collideOn" type="button">ชนได้</button>
+                  <button class="btn sm ghost" data-act="shadowOff" type="button">ปิดเงา</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>ก๊อปและจัดเรียง</h3>
+                <div class="row-btns">
+                  <input type="number" id="dupCount" value="4" min="1" max="200" class="num" aria-label="จำนวน">
+                  <select id="dupPattern"><option value="line">เป็นแถว</option><option value="circle">เป็นวง</option><option value="grid">เป็นตาราง</option></select>
+                  <input type="number" id="dupGap" placeholder="ระยะห่าง" class="num" aria-label="ระยะห่าง">
+                  <button class="btn sm" data-act="duplicate" type="button">ก๊อป</button>
+                </div>
+                <div class="row-btns">
+                  <input type="number" id="scCount" value="12" min="1" max="300" class="num" aria-label="จำนวนโปรย">
+                  <input type="number" id="scRadius" value="40" min="2" class="num" aria-label="รัศมี">
+                  <label class="check sm"><input type="checkbox" id="scScale" checked> สุ่มขนาด</label>
+                  <button class="btn sm" data-act="scatter" type="button">โปรยรอบ ๆ</button>
+                </div>
+              </div>
+
+              <div class="tool pro-tool">
+                <h3>✨ แต่งแบบมือโปร</h3>
+                <div class="row-btns">
+                  <span class="muted">สี</span>
+                  <input type="color" id="edTint" value="#ffc4dc" title="สีย้อม">
+                  <button class="btn sm" data-act="tint" type="button">ย้อมสี (เก็บลาย)</button>
+                  <button class="btn sm ghost" data-act="untint" type="button">เอาสีย้อมออก</button>
+                </div>
+                <div class="row-btns">
+                  <input type="color" id="edGem" value="#ff5fa2" title="สีอัญมณี">
+                  <input type="color" id="edMetal" value="#e9b949" title="สีทอง">
+                  <button class="btn sm" data-act="restyle" type="button">ทองเงา + อัญมณีแก้ว</button>
+                </div>
+                <div class="row-btns">
+                  <input type="number" id="edPendants" value="9" min="1" max="40" class="num" aria-label="จำนวนจี้">
+                  <button class="btn sm" data-act="pendants" type="button">แขวนจี้คริสตัล</button>
+                  <button class="btn sm ghost" data-act="pendantsOff" type="button">เอาออก</button>
+                </div>
+                <div class="row-btns">
+                  <select id="edDecor"><option value="flower">🌸 ดอกซากุระ</option><option value="heart">💗 หัวใจ</option><option value="pearl">⚪ ไข่มุก</option><option value="gem">💎 อัญมณี</option></select>
+                  <input type="number" id="edDecorCount" value="14" min="1" max="80" class="num" aria-label="จำนวน">
+                  <input type="color" id="edDecorColor" value="#ffb3cf" title="สีของแต่ง">
+                  <button class="btn sm" data-act="decorate" type="button">โปรยบนผิว</button>
+                  <button class="btn sm ghost" data-act="decorOff" type="button">เอาออก</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>🧍 ใส่ตัวละคร (Accessory)</h3>
+                <div class="row-btns">
+                  <select id="edSlot">
+                    <option value="BodyBackAttachment">หลัง (ปีก/เป้)</option>
+                    <option value="HatAttachment">หัว (หมวก/มงกุฎ)</option>
+                    <option value="WaistBackAttachment">เอวด้านหลัง (หาง)</option>
+                  </select>
+                  <select id="edRig"><option value="">ไม่ใส่ เก็บไว้ใน ReplicatedStorage</option></select>
+                </div>
+                <div class="row-btns">
+                  <span class="muted">กว้าง</span><input type="number" id="edAccWidth" value="6" min="0.5" step="0.5" class="num"><span class="muted">studs</span>
+                  <button class="btn sm primary" data-act="accessory" type="button">แปลงเป็น Accessory</button>
+                </div>
+              </div>
+
+              <div class="tool">
+                <h3>🖐️ ของถือในมือ (Tool)</h3>
+                <div class="row-btns">
+                  <span class="muted">ยาว</span><input type="number" id="edToolLen" value="3" min="0.5" step="0.5" class="num"><span class="muted">studs</span>
+                  <button class="btn sm primary" data-act="tool" type="button">แปลงเป็น Tool</button>
+                </div>
+                <p class="muted">ใส่ไว้ใน StarterPack — กด Play แล้วกดเลข 1 เพื่อถือ</p>
+              </div>
+
+              <div class="tool">
+                <h3>เครื่องมือมือโปร</h3>
+                <div class="row-btns">
+                  <button class="btn sm" data-act="finalize" type="button" title="รวมเป็น Model, ตั้ง pivot ที่ฐาน, Anchored, การชนแบบ Hull">จัดให้พร้อมใช้</button>
+                  <button class="btn sm" data-act="optimize" type="button" title="ปิดเงาชิ้นเล็ก, การชนแบบกล่องให้ชิ้นเล็ก, RenderFidelity อัตโนมัติ">ลดภาระเกม</button>
+                  <button class="btn sm" data-act="stripScripts" type="button">ลบสคริปต์ข้างใน</button>
+                  <button class="btn sm" data-act="rename" type="button">เปลี่ยนชื่อ</button>
+                  <button class="btn sm" data-act="thumb" type="button">ถ่ายรูป</button>
+                </div>
+              </div>
+            </div>
+            <img id="edThumb" class="ed-thumb" alt="" hidden>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= LIBRARY ======================= -->
+    <section class="page" id="page-library" hidden>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2>★ คลัง</h2>
+            <p class="muted">ทุกโมเดลที่สร้างเก็บไว้ที่นี่ ใส่กลับใน place ไหนก็ได้</p>
+          </div>
+          <div class="row-btns">
+            <input class="search" id="libSearch" placeholder="ค้นหา…">
+            <label class="check sm"><input type="checkbox" id="libFav"> เฉพาะที่ชอบ</label>
+            <a class="btn sm ghost" href="/api/library/export" download>ส่งออก</a>
+            <label class="btn sm ghost">นำเข้า<input type="file" id="libImport" accept="application/json" hidden></label>
+          </div>
+        </div>
+        <div id="libGrid" class="grid"></div>
+      </div>
+    </section>
+
+    <!-- ======================= STORE ======================= -->
+    <section class="page" id="page-store" hidden>
+      <div class="card">
+        <div class="card-head">
+          <div>
+            <h2>⬇ ของฟรีจาก Creator Store</h2>
+            <p class="muted">ค้นของฟรีใน Roblox แล้ววางหน้ากล้องให้เลย</p>
+          </div>
+        </div>
+        <form class="row-btns store-search" id="storeForm">
+          <input class="search grow" id="storeQ" placeholder="เช่น lamp post, cafe table, treasure chest">
+          <button class="btn primary" type="submit">ค้นหา</button>
+          <label class="check sm"><input type="checkbox" id="keepScripts"> เก็บสคริปต์ข้างในไว้ <em class="muted">(ปิดไว้ปลอดภัยกว่า)</em></label>
+        </form>
+        <div id="storeGrid" class="grid"></div>
+      </div>
+    </section>
+
+    <!-- ======================= GUIDE ======================= -->
+    <section class="page" id="page-guide" hidden>
+      <div class="card prose">
+        <h2>คู่มือ Sweetprops</h2>
+        <h3>1 · เชื่อมกับ Roblox Studio</h3>
+        <ol>
+          <li>เปิด <b>Roblox Studio</b> แล้วเปิด place ที่จะใช้</li>
+          <li>เปิดแผง <b>Assistant</b> → เมนู <b>⋯</b> → <b>Manage MCP Servers</b> → เปิด <b>Enable Studio as MCP server</b></li>
+          <li>กลับมาที่ Sweetprops มุมซ้ายบนจะขึ้น <span class="pill ok">เชื่อมแล้ว</span> ถ้ายังไม่ขึ้น กดที่สถานะเพื่อลองเชื่อมใหม่</li>
+        </ol>
+        <h3>2 · สร้างโมเดล</h3>
+        <ul>
+          <li><b>AI เมช</b> — เมชเนียนมีลาย สวยที่สุด เหมาะกับของตกแต่ง ตัวละคร และอาหาร (AI วาดจากคำอธิบาย ไม่ได้ดูรูป)</li>
+          <li><b>ประกอบชิ้นส่วน</b> — สร้างจาก Part ธรรมดา แก้สีหรือขยับทีละชิ้นได้ และมี Attributes ให้ปรับค่าต่อได้</li>
+          <li><b>จากรูปต้นแบบ → การ์ด 2.5D</b> — <b>เหมือนภาพ 100%</b> ลบพื้นหลังให้อัตโนมัติ ผ่าซ้าย-ขวาพับเป็นตัว V แล้วอัปโหลดเข้าบัญชี Roblox ของคุณ เหมาะกับปีก ป้าย ของแบน และของแฟชั่น</li>
+          <li><b>จากรูปต้นแบบ → AI 3D ตามรูป</b> — เป็น 3D จริงมองได้รอบตัว แต่ไม่เหมือนเป๊ะ ติ๊ก “ทำคู่” เพื่อให้ได้แบบ AI เมชมาเทียบด้วย</li>
+          <li>มี <b>แผ่นแปลน</b> หลายมุม? กด <b>✂ ครอปเฉพาะส่วน</b> แล้วเลือกแค่ FRONT VIEW ก่อนสร้าง</li>
+        </ul>
+        <h3>โหมดมือโปร (ให้สวยและใกล้รูปขึ้น)</h3>
+        <ul>
+          <li><b>สร้างพร้อมกัน 2–4 แบบ</b> — AI สุ่มผลทุกครั้ง สร้างหลายแบบแล้วเลือกตัวที่สวยสุด ลบตัวที่เหลือในหน้าปรับแต่ง</li>
+          <li><b>ย้อมสีลาย</b> — เปลี่ยนสีลายที่ AI วาด (เช่น ขาวอมฟ้า → ชมพูพาสเทล) โดยยังเก็บรายละเอียดขนนกไว้</li>
+          <li><b>วัสดุมือโปร</b> — ชิ้นที่เป็นทอง/โซ่/กรอบ เปลี่ยนเป็นโลหะทองเงา ชิ้นที่เป็นอัญมณี เปลี่ยนเป็นแก้วใสเรืองแสง</li>
+          <li><b>แขวนจี้คริสตัล</b> และ <b>โปรยดอกซากุระ/หัวใจ/ไข่มุก</b> บนผิวโมเดล</li>
+          <li><b>ชุดสำเร็จรูป</b> — กดปีกแฟนซี มงกุฎ ดาบ ฯลฯ เพื่อตั้งค่าทุกอย่างให้ในคลิกเดียว</li>
+        </ul>
+        <h3>ใส่ตัวละคร (Accessory)</h3>
+        <p>หน้าปรับแต่ง → <b>🧍 ใส่ตัวละคร</b> เลือกตำแหน่ง (หลัง/หัว/เอว) เลือก Rig แล้วกด <b>แปลงเป็น Accessory</b> ถ้าไม่เลือก Rig จะเก็บไว้ที่ ReplicatedStorage › SweetpropsAccessories เอาไปใช้ในเกมได้</p>
+        <p><b>เคล็ดลับให้งานออกมาสวย:</b> บอก <i>วัตถุ + วัสดุ + สี + รายละเอียดเด่น</i> เช่น “wooden treasure chest, gold trims, glowing gems, slightly open lid” แล้วเลือกสไตล์ให้ตรงกับเกม ของชิ้นเดียวได้ผลดีกว่าฉากทั้งฉาก</p>
+        <h3>3 · ปรับแต่งแบบมือโปร</h3>
+        <ul>
+          <li><b>จัดให้พร้อมใช้</b> — รวมเป็น Model ตั้ง Pivot ที่ฐาน ใส่ Anchored และการชนแบบ Hull</li>
+          <li><b>ลดภาระเกม</b> — ปิดเงาชิ้นเล็ก ใช้การชนแบบกล่อง ตั้ง RenderFidelity อัตโนมัติ</li>
+          <li><b>วัสดุ AI</b> — สร้าง MaterialVariant ใหม่จากคำอธิบาย ฟรีผ่าน Roblox</li>
+          <li><b>เอฟเฟกต์</b> — เรืองแสง ประกาย เส้นขอบ นีออน กลีบดอกลอย หัวใจลอย ออร่า หมุน ลอย เต้นตุบ ไฟ ควัน (เอฟเฟกต์ที่ขยับได้จะเห็นตอนกด Play)</li>
+          <li><b>ก๊อปและจัดเรียง</b> — เรียงเป็นแถว เป็นวง เป็นตาราง หรือโปรยแบบสุ่มบนพื้น เหมาะทำป่า ทำรั้ว ทำโคมไฟถนน</li>
+          <li>ทุกคำสั่งกด <kbd>Ctrl</kbd>+<kbd>Z</kbd> ใน Studio ย้อนกลับได้</li>
+        </ul>
+        <h3>4 · คำสั่งด่วน</h3>
+        <p>กด <kbd>Ctrl</kbd>+<kbd>K</kbd> ที่ไหนก็ได้ เพื่อค้นและสั่งงานกับโมเดลที่เลือกอยู่ทันที</p>
+        <h3>แก้ปัญหา</h3>
+        <ul>
+          <li><b>ไม่เจอ Studio</b> — เช็คว่าเปิด MCP server ใน Studio แล้ว และเปิด place อยู่ (ไม่ใช่หน้า Start Page)</li>
+          <li><b>ไม่พบ StudioMCP.exe</b> — อัปเดต Roblox Studio หรือระบุ path ในหน้าตั้งค่า</li>
+          <li><b>สร้างช้า</b> — ปกติใช้ 1–3 นาที ระหว่างนี้ยังใช้หน้าอื่นได้</li>
+          <li><b>อยากใช้ภาษาอังกฤษ</b> — AI ของ Roblox เข้าใจภาษาอังกฤษดีที่สุด ภาษาไทยก็ใช้ได้</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ======================= SETTINGS ======================= -->
+    <section class="page" id="page-settings" hidden>
+      <div class="card settings">
+        <h2>⚙ ตั้งค่า</h2>
+        <div class="set-row">
+          <div><b>StudioMCP</b><p class="muted">ตัวกลางที่ Sweetprops ใช้คุยกับ Roblox Studio (มากับ Studio) ปล่อยว่างไว้ให้หาเองอัตโนมัติ</p></div>
+          <div class="set-ctl">
+            <input id="setExe" placeholder="หาเองอัตโนมัติ">
+            <div class="muted mono" id="setExeFound"></div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div><b>Hugging Face token</b><p class="muted">สำหรับ “3D เหมือนรูป” — สมัครฟรีที่ <a href="https://huggingface.co/join" target="_blank" rel="noopener">huggingface.co</a> แล้วสร้าง token แบบ Read ที่ <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">Settings › Access Tokens</a> โควต้าฟรีราว 3–5 ครั้ง/วัน</p></div>
+          <div class="set-ctl">
+            <input id="setHf" type="password" placeholder="hf_…" autocomplete="off">
+            <div class="muted" id="setHfState"></div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div><b>Roblox Open Cloud API key</b> <em>ไม่บังคับ</em><p class="muted">ถ้าใส่ โมเดล 3D จะอัปโหลดเข้าบัญชีและโผล่ใน Studio ให้เอง — สร้างที่ <a href="https://create.roblox.com/dashboard/credentials" target="_blank" rel="noopener">Creator Dashboard › Credentials</a> ให้สิทธิ์ <b>Assets: Read + Write</b> ถ้าไม่ใส่ จะได้ไฟล์ .glb ไว้นำเข้าเองด้วย Import 3D</p></div>
+          <div class="set-ctl">
+            <input id="setOc" type="password" placeholder="ไม่ใส่ก็ได้" autocomplete="off">
+            <input id="setGroup" placeholder="Group ID (ถ้าจะอัปโหลดเข้ากลุ่ม)">
+            <div class="muted" id="setOcState"></div>
+          </div>
+        </div>
+        <div class="set-row">
+          <div><b>ถ่ายรูปและเก็บเข้าคลังอัตโนมัติ</b><p class="muted">ทุกโมเดลที่สร้างจะถูกเก็บไว้ในคลังพร้อมรูป</p></div>
+          <label class="switch"><input type="checkbox" id="setThumb"><i></i></label>
+        </div>
+        <div class="set-row">
+          <div><b>เปิดเบราว์เซอร์ให้เองตอนเริ่มโปรแกรม</b></div>
+          <label class="switch"><input type="checkbox" id="setOpen"><i></i></label>
+        </div>
+        <div class="row-btns">
+          <button class="btn primary" id="saveSettings" type="button">บันทึก</button>
+          <button class="btn" id="testConn" type="button">ทดสอบการเชื่อมต่อ</button>
+        </div>
+        <details class="more">
+          <summary>บันทึกการทำงาน (สำหรับแก้ปัญหา)</summary>
+          <pre class="logs" id="logs"></pre>
+        </details>
+        <p class="muted" id="verText"></p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- command palette -->
+<div class="palette" id="palette" hidden>
+  <div class="palette-box" role="dialog" aria-label="คำสั่งด่วน">
+    <input id="paletteIn" placeholder="พิมพ์คำสั่ง เช่น หมุน, สี, เรืองแสง, ก๊อป…">
+    <div class="palette-target muted" id="paletteTarget"></div>
+    <ul id="paletteList"></ul>
+  </div>
+</div>
+
+<div class="palette" id="cropModal" hidden>
+  <div class="palette-box crop-box" role="dialog" aria-label="ครอปรูป">
+    <div class="crop-head"><b>ลากกรอบเลือกส่วนที่ต้องการ</b><span class="muted">เช่น เฉพาะ FRONT VIEW ในแผ่นแปลน</span></div>
+    <div class="crop-stage"><canvas id="cropCanvas"></canvas></div>
+    <div class="row-btns crop-foot">
+      <button type="button" class="btn ghost" id="cropReset">ใช้ทั้งภาพ</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn ghost" id="cropCancel">ยกเลิก</button>
+      <button type="button" class="btn primary" id="cropApply">ใช้ส่วนนี้</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

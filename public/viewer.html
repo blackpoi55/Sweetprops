@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ดูโมเดล 3D · Sweetprops</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<style>
+  :root { --bg: #fff7fa; --text: #2a1b24; --muted: #8a7480; --line: #f1dde6; --primary: #f0457f; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #17111a; --text: #f7eaf1; --muted: #b49fae; --line: #3a2c40; color-scheme: dark; } }
+  html, body { margin: 0; height: 100%; background: radial-gradient(900px 500px at 50% 0%, color-mix(in srgb, var(--primary) 14%, transparent), transparent 70%), var(--bg); color: var(--text); font: 14px/1.5 "IBM Plex Sans Thai", system-ui, sans-serif; }
+  #stage { position: fixed; inset: 0; }
+  .bar { position: fixed; left: 16px; right: 16px; top: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; pointer-events: none; }
+  .bar > * { pointer-events: auto; }
+  .pill { background: color-mix(in srgb, var(--bg) 85%, transparent); border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px; backdrop-filter: blur(8px); }
+  .muted { color: var(--muted); }
+  a.btn { color: #fff; background: var(--primary); border-radius: 999px; padding: 6px 14px; text-decoration: none; font-weight: 600; }
+  #msg { position: fixed; inset: 0; display: grid; place-items: center; color: var(--muted); }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="msg">กำลังโหลดโมเดล…</div>
+<div class="bar">
+  <span class="pill"><b>ดูโมเดล 3D</b> <span class="muted" id="info"></span></span>
+  <span class="pill muted">ลากเพื่อหมุน · ล้อเมาส์ซูม</span>
+  <a class="btn" id="dl" download>ดาวน์โหลด .glb</a>
+</div>
+<script type="importmap">
+  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+  import * as THREE from 'three';
+  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+  const src = new URLSearchParams(location.search).get('src');
+  const msg = document.getElementById('msg');
+  if (!src || !src.startsWith('/models/')) { msg.textContent = 'ไม่ได้ระบุไฟล์โมเดล'; throw new Error('no src'); }
+  document.getElementById('dl').href = src;
+
+  const stage = document.getElementById('stage');
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  stage.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8899aa, 2.2));
+  const sun = new THREE.DirectionalLight(0xffffff, 1.6);
+  sun.position.set(2, 3, 2);
+  scene.add(sun);
+  const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
+  const controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 1.2;
+  controls.addEventListener('start', () => { controls.autoRotate = false; });
+
+  function resize() {
+    renderer.setSize(innerWidth, innerHeight);
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  addEventListener('resize', resize);
+  resize();
+
+  new GLTFLoader().load(src, (gltf) => {
+    const obj = gltf.scene;
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    obj.position.sub(center);
+    scene.add(obj);
+    let tris = 0;
+    obj.traverse((o) => { if (o.isMesh) tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3; });
+    const r = size.length();
+    camera.position.set(0, size.y * 0.15, r * 1.6);
+    controls.target.set(0, 0, 0);
+    document.getElementById('info').textContent = `· ${Math.round(tris).toLocaleString()} สามเหลี่ยม`;
+    msg.remove();
+  }, undefined, (e) => { msg.textContent = `เปิดโมเดลไม่ได้: ${e.message || e}`; });
+
+  renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+/node_modules/
+/local3d/
+*.log
+
+# Local data: keep the prop library (library.json + thumbs) so it travels between PCs,
+# but never commit settings (may hold API keys) or temporary uploads / generated files.
+data/settings.json
+data/settings.json.tmp
+data/*.tmp
+data/uploads/
+data/models/
